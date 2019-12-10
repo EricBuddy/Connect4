@@ -2,6 +2,8 @@ package game;
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
+
 import java.util.Scanner;
 import java.io.*;
 
@@ -13,12 +15,16 @@ private static final int NUM_ROWS = 6;
 //Rows
 private static final Color colorEmpty = Color.WHITE;
 private static final Color colorPlayer1 = Color.RED;
-private static final Color colorPlayer2 = Color.GREEN;
+private static final Color colorPlayer2 = Color.YELLOW;
 private static int currentPlayer; // either 1 or 2
 // Buttons
+static String player1;
+static String player2;
+ static int p1Score = 0;
+ static int p2Score = 0;
 private JButton[] buttons = new JButton[NUM_COLUMNS+1];
 private static JCheckBox[] checkBoxes = new JCheckBox[1];
-
+static String player;
 //JCheckBox logGame = new JCheckBox("Log Game");
 //logGame.addActionListener(this);
 
@@ -31,6 +37,8 @@ public static PrintWriter pw = null;
 public Game() {
 
 try {
+player1 = JOptionPane.showInputDialog("Enter a name for player 1:");
+player2 = JOptionPane.showInputDialog("Enter a name for player 2:");
 FileOutputStream log = new FileOutputStream("GameLog.txt");
 pw = new PrintWriter(log);
 pw.print("");
@@ -105,7 +113,7 @@ if(currentPlayer == 1) {
 gameBoard[row][col].setBackground(colorPlayer1);
 
 if (checkBoxes[0].isSelected()) {
-pw.println("Player 1 selects row " + row + " : Column "+col);
+pw.println(player1 + " selects row " + row + " : Column "+col);
 pw.println("-----------------------");
 pw.flush();
 }
@@ -116,7 +124,7 @@ break;
 else{
 gameBoard[row][col].setBackground(colorPlayer2);
 if (checkBoxes[0].isSelected()) {
-pw.println("Player 2 selects row " + row + " : Column "+col);
+pw.println(player2+" selects row " + row + " : Column "+col);
 pw.println("-----------------------");
 pw.flush();
 }
@@ -135,7 +143,6 @@ public void actionPerformed(ActionEvent e) {
 // find out which button was clicked
 JButton sourceButton = (JButton) e.getSource();
 
-// add one more piece to that column
 if (sourceButton.getText() == "NEW GAME") {
 scoreBoard.setLastWinner(scoreBoard.getChampion());
 ScoreBoard.setChampion("N/A");
@@ -200,17 +207,19 @@ continue;
 if(j + 3 < WIDTH &&
 currColor.equals(board[i][j + 1].getBackground()) &&
 currColor.equals(board[i][j + 2].getBackground()) &&
-currColor.equals(board[i][j + 3].getBackground())) {// Look Right
+currColor.equals(board[i][j + 3].getBackground())) {//Right
 win = true;
 if (currentPlayer == 1) {
-currentPlayer = 2;
+player =player2;
+p2Score=1+p2Score;
 } else {
-currentPlayer = 1;
+	player =player1;
+	p1Score=1+p1Score;
 }
-ScoreBoard.setChampion("Player "+ currentPlayer);
+ScoreBoard.setChampion( player);
 if (checkBoxes[0].isSelected()) {
 pw.println("-----------------------");
-pw.println("PLAYER " + currentPlayer + " Has won!");
+pw.println(player + " Has won!");
 pw.flush();
 }
 
@@ -219,17 +228,19 @@ return win;
 if(i - 3 >= 0 &&
 currColor.equals(board[i - 1][j].getBackground()) &&
 currColor.equals(board[i - 2][j].getBackground()) &&
-currColor.equals(board[i - 3][j].getBackground())) {// Look Up
+currColor.equals(board[i - 3][j].getBackground())) {// Up
 win = true;
 if (currentPlayer == 1) {
-currentPlayer = 2;
+player =player2;
+p2Score=1+p2Score;
 } else {
-currentPlayer = 1;
+	player =player1;
+	p1Score=1+p1Score;
 }
-ScoreBoard.setChampion("Player "+currentPlayer);
+ScoreBoard.setChampion( player);
 if (checkBoxes[0].isSelected()) {
 pw.println("-----------------------");
-pw.println("PLAYER " + currentPlayer + " Has won!");
+pw.println(player + " Has won!");
 pw.flush();
 }
 return win;
@@ -237,17 +248,19 @@ return win;
 if(j + 3 < WIDTH && i - 3 >= 0 &&
 currColor.equals(board[i - 1][j + 1].getBackground()) &&
 currColor.equals(board[i - 2][j + 2].getBackground()) &&
-currColor.equals(board[i - 3][j + 3].getBackground())) {// Look Up and Right
+currColor.equals(board[i - 3][j + 3].getBackground())) {//  Right d
 win = true;
 if (currentPlayer == 1) {
-currentPlayer = 2;
+player =player2;
+p2Score=1+p2Score;
 } else {
-currentPlayer = 1;
+	player =player1;
+	p1Score=1+p1Score;
 }
-ScoreBoard.setChampion("Player "+currentPlayer);
+ScoreBoard.setChampion( player);
 if (checkBoxes[0].isSelected()) {
 pw.println("-----------------------");
-pw.println("PLAYER " + currentPlayer + " Has won!");
+pw.println(player + " Has won!");
 pw.flush();
 }
 return win;
@@ -255,20 +268,20 @@ return win;
 if(j - 3 >= 0 && i - 3 >=0 &&
 currColor.equals(board[i - 1][j - 1].getBackground()) &&
 currColor.equals(board[i - 2][j - 2].getBackground()) &&
-currColor.equals(board[i - 3][j - 3].getBackground())) {// Look Up and Left
+currColor.equals(board[i - 3][j - 3].getBackground())) {// Left d
 win = true;
 if (currentPlayer == 1) {
-currentPlayer = 2;
+player =player2;
+p2Score=1+p2Score;
 } else {
-currentPlayer = 1;
+	player =player1;
+	p1Score=1+p1Score;
 }
-ScoreBoard.setChampion("Player "+currentPlayer);
-//ScoreBoard.setName(currentPlayer == 1 && currentPlayer == 2);
-
+ScoreBoard.setChampion( player);
 if (checkBoxes[0].isSelected()) {
 pw.println("-----------------------");
 
-pw.println("PLAYER " + currentPlayer + " Has won!");
+pw.println(player + " Has won!");
 pw.flush();
 }
 return win;
@@ -286,5 +299,8 @@ window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 window.setResizable(false);
 window.pack();
 window.setVisible(true);
+
+
+
 }
 }
